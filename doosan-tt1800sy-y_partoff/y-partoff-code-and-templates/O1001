@@ -1,0 +1,117 @@
+%
+O1001(PNTEMPLATE-REVX-OPXX-UPPER)
+
+(----DOOSAN PUMA TT1800SY w/ Y-PartOff----)
+(Upper Program)
+(Template For Your Code)
+(-----------------------------------------)
+(20230603)(1830 est)(EJR)
+
+
+#515=0(*LEAVE ALONE*)
+
+N1234(-----MACRO-AREA------)
+
+(===============================)
+(========MUST BE CHANGED========)
+(===============================)
+
+#513=0.001(MAIN-STICK-OUT)
+#502=6.0(STOCK:DIA)
+#511=0.001(PART:OAL)
+#504=-0.001(SUB:SWALLOW-POS)
+#506=3.0(SUB:JAW-WIDTH)
+
+(=SHOULD CHECK THESE=)
+#508=1200(P/O:RPM)
+#507=.0040(P/O:FEED-IPR)
+
+(=UNLIKELY TO CHANGE=)
+#500=-0.0750(P/O:Y-#1)
+#510=0.0100(P.O:Y-#2)
+
+(=ALMOST NEVER CHANGED=)
+#501=0.0200(PART:FCE-AMT)
+#512=0.1180(P/0:TOOL-WIDTH)
+#503=0.1000(A-RAPID-POS)
+
+(===============================)
+(========EDIT ABOVE HERE========)
+(===============================)
+
+(--AUTO-CALC--)(*LEAVE ALONE*)
+#509=[0-#511-#501-#512](LPO-Z-POS)
+#505=[#511+#504+#512+#501+#501](A-PULL-POS)
+#514=[#513+#509](LPO-SANITY-CHECK)
+(--LOGIC--)(*LEAVE ALONE*)
+IF[#514LE.1]GOTO3000
+(-----------------------)
+M1
+(--MACRO-FETCH-RETURN--)(*LEAVE ALONE*)
+IF[#515EQ1]GOTO1002
+IF[#515EQ2]GOTO2002
+(-----------------------)
+G20(M12)
+M98P1
+M900(SYNC-UP)
+()
+(===============================)
+(========PART-CODE-BELOW========)
+(===============================)
+
+
+( USERS CAN USE: )
+(-)(N0001-N0999)
+(-)(M901-M948)
+(-)(#550-#599)
+
+(=========DONT-EDIT-BELOW=========)
+
+(*)M949(*)
+M05P11(S1 STOP)
+M05P12(UT STOP)
+M9(COOLANT OFF)
+M34(MILL-MODE-OFF)
+M98P1(HOME)
+G18(XZ PLANE)
+(*)M950(*)
+(------)
+/M00
+N1000(EJECT, P/O, TRANSFER)
+M98P1
+/2GOTO2000
+N1001(TRANSFER)
+
+#515=1(RETURN-MACRO)
+GOTO1234(FETCH-MACROS)
+N1002(FETCH-DONE)
+
+(*)M951(*)
+M98P8003(SUB)
+(*)M952(*)
+#515=0
+M30
+
+(====LPO-BELOW====)
+
+N2000(EJECT, P/O, TRANSFER-LPO)
+N2001(TRANSFER)
+
+#515=2(RETURN-MACRO)
+GOTO1234(FETCH-MACROS)
+N2002(FETCH-DONE)
+
+(*)M953(*)
+M98P8004(SUB-LPO)
+(*)M954(*)
+/2M98P8001(BAR CHANGE)
+(*)M960(*)
+#515=0
+M30
+
+N3000(ERROR)
+#515=0
+M0
+(LPO TOO CLOSE TO H1)
+M2
+%
