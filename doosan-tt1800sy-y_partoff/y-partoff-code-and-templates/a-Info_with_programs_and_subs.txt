@@ -1,3 +1,7 @@
+Eric J. Rich (aka EJRCNC)
+ericjrich@gmail.com
+Github: ericjrich
+
 ╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
 +------------------------------------------ DOOSAN PUMA TT1800SY USE WITH A Y-AXIS PAROFF TOOL ---------------------------------------------------------------+
   These programs are used in conjunction to aid users in running their parts on a Doosan Puma TT1800SY lathe with a Y-Axis Part-Off Tool.
