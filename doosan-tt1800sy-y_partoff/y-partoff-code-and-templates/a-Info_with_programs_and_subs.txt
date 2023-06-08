@@ -1,5 +1,5 @@
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
+╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
++------------------------------------------ DOOSAN PUMA TT1800SY USE WITH A Y-AXIS PAROFF TOOL ---------------------------------------------------------------+
   These programs are used in conjunction to aid users in running their parts on a Doosan Puma TT1800SY lathe with a Y-Axis Part-Off Tool.
 The programs consist of the main programs (Upper and Lower) and several sub-programs. I'll provide an overview of how they work together.
 
@@ -14,12 +14,10 @@ conditions before executing specific actions.
   The sub-programs are called within the main programs and perform specific tasks such as home return, secondary home return, bar change,
 manual part-off, ejecting and cutoff, and part-off with hand unload. These sub-programs contain additional macros and logic specific to
 their respective tasks.
-
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
----------- Programs And What They Are For ----------
-*Here is a layout of all the programs by their file names and a brief description of their purpose:*
-
+╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
++------------------------------------------ THE PROGRAMS THAT WE WILL USE TO ACHIVE OUR GOAL -----------------------------------------------------------------+
   <-= Main Programs =->
   Please note that "PN" in the file names represents a placeholder for the specific part number or identifier.
   "REVX" and "OPXX" also represent placeholders for revision numbers and operation numbers, respectively. Users
@@ -73,66 +71,71 @@ their respective tasks.
 
     O8013(PNHAND-UNLOAD-AND-CUTOFF-LOWER): Part-Off and Hand Unload (Lower)
 	    Performs part-off and hand unload operation on the lower turret. Called for part-off processes requiring manual unloading.
+╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
++----------------------------------------- The Macro Variables: Reference Chart ------------------------------------------------------------------------------+
+[Variable]  [Description]                           [Usage in Programs]                         [+/-]
+
+(====LEAVE ALONE====)
+#515       Macro Control Variable                   O1001, O1001.P-2
+            Controls the execution and flow of the program by indicating which macros should be called and when.
+
+#509       LPO-Z-POS (Last Part Off Z Pos)          O1001, O1001.P-2
+            Specifies the Z-axis position for the last part-off on a bar. It ensures the cutoff tool doesn't collide with the spindle.
 
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+(==== MUST BE CHANGED ====)
+#513       Stock Stick Out From Main Spindle        O1001, O1001.P-2                            +
+            Determines the distance the stock material extends beyond the main spindle during machining operations.
 
----------- The Marcro Variables And Why ------------
-**The (+), (-), or (special + -) will tell you whether the number should be positive or negative or special value in either of those polarities**
+#502       STOCK:DIA (Stock Diameter)               O1001, O1001.P-2, O8002, O8004.P-2          +
+            Represents the diameter of the raw stock material from which the part is being machined.
 
-  #515: Macro Control Variable:
-	  Controls the execution and flow of the program by indicating which macros should be called and when.
+#511       PART:OAL (PART: Over All Length)          O1001, O1001.P-2                            +
+            Represents the total length of the part being machined, including any allowances or protrusions.
 
-  #513: Stock Stick Out From Main Spindle:
-	  Determines the distance the stock material extends beyond the main spindle during machining operations. (+)
+#504       SUB:SWALLOW-POS (Sub-Spld SwlP)          O1001, O1001.P-2, O8003, O8004              -
+            Defines the position at which the sub-spindle "swallows" or grips the part for cutoff or transfer operations.
 
-  #502: STOCK:DIA (Stock Diameter):
-	  Represents the diameter of the raw stock material from which the part is being machined. (+)
-
-  #511: PART:OAL (PART: Over All Length):
-	  Represents the total length of the part being machined, including any allowances or protrusions. (+)
-
-  #504: SUB:SWALLOW-POS (Sub-Spindle Swallow Position):
-	  Defines the position at which the sub-spindle "swallows" or grips the part for cutoff or transfer operations. (-)
-
-  #506: SUB:JAW-WIDTH (Sub-Spindle Jaw Width):
-	  Specifies the width of the jaws on the sub-spindle chuck used for gripping the part. (+)
-
-  #508: P/O:RPM (Part-Off RPM):
-	  Sets the rotational speed (in revolutions per minute) of the spindle during the part-off operation. (+)
-
-  #507: P/O:FEED-IPR (Part-Off Feed Rate Inches Per Rev):
-	  Determines the feed rate in inches per revolution for the part-off operation. (+)
-
-  #500: Y-PartOff: Y Cut To Location 1of2:
-	  Specifies the Y-axis position for the begining of the part-off cut during the Y-axis part-off operation.
-    (This is the majority of the cut and will cut at the IPR set in #507 variable). (-)
-
-  #510: Y-PartOff: Y Cut To Location 2of2:
-	  Specifies the Y-axis position for the end of the part-off cut during the Y-axis part-off operation(will cut at the hard coded speed .001 IPR). (- or <= +.010")
-
-  #501: PART:FCE-AMT (Part Face Amount):
-	  Specifies the amount of material to be removed from the face of the part during the part-off operation. (+)
-
-  #512: P/0:TOOL-WIDTH (Part-Off Tool Width):
-	  Indicates the width of the part-off tool used for cutting off the part from the stock material. (+)
-
-  #503: A-RAPID-POS (A-Axis Rapid Position):
-	  Determines the rapid movement position of the A-axis (rotary axis) during specific operations. (+)
-
-  #509: LPO-Z-POS (Last Part Off Z Position):
-	  Specifies the Z-axis position for the last part-off on a bar. It ensures the cutoff tool doesn't collide with the spindle.
-
-  #514: Last Part Off Sanity Check:
-	  Verifies the minimum distance between the part-off tool zero and the spindle face to prevent collision during the last part-off operation.
+#506       SUB:JAW-WIDTH (Sub-Spld Jaw W)           O1001, O1001.P-2, O8004.P-2                 +
+            Specifies the width of the jaws on the sub-spindle chuck used for gripping the part.
 
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+(==== SHOULD BE VERIFIED ====)
+#508       P/O:RPM (Part-Off RPM)                   O1001, O1001.P-2, O8003, O8004              +
+            Sets the rotational speed (in revolutions per minute) of the spindle during the part-off operation.
+
+#507       P/O:FEED-IPR (Part-Off Feed R)           O1001, O1001.P-2, O8003, O8004              +
+            Determines the feed rate in inches per revolution for the part-off operation.
 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~ The Main Programs (Upper & Lower) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(==== UNLIKELY TO CHANGE ====)
+#500       Y-PartOff: Y Cut To Loc 1of2             O1001, O1001.P-2, O8003, O8004              '0 to +.010 (unless you are doing tubing)'
+            Specifies the Y-axis position for the beginning of the part-off cut during the Y-axis part-off operation.
+
+#510       Y-PartOff: Y Cut To Loc 2of2             O1001, O1001.P-2, O8003, O8004              (- or <= +.010")
+            Specifies the Y-axis position for the end of the part-off cut during the Y-axis part-off operation.
+
+
+(==== ALMOST NEVER CHANGED ====)
+#501       PART:FCE-AMT (Part Face Amnt)            O1001, O1001.P-2
+            Specifies the amount of material to be removed from the face of the part during the part-off operation.
+
+#512       P/0:TOOL-WIDTH (Part-Off T W)            O1001, O1001.P-2
+            Indicates the width of the part-off tool used for cutting off the part from the stock material.
+
+#503       A-RAPID-POS (A-Axis Rapid Pos)           O1001, O1001.P-2
+            Determines the rapid movement position of the A-axis (rotary axis) during specific operations.
+
+
+(==== LEAVE ALONE ====)
+#514       Last Part Off Sanity Check               O1001, O1001.P-2
+            Verifies the minimum distance between the part-off tool zero and the spindle face to prevent collision during the last part-off operation.
+╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
++--------------------------- THE MAIN PROGRAMS (TEMPLATES) FOR UPPER AND FOR LOWER ---------------------------------------------------------------------------+
 
 %
 O1001(PNTEMPLATE-REVX-OPXX-UPPER)
@@ -148,10 +151,8 @@ O1001(PNTEMPLATE-REVX-OPXX-UPPER)
 (#515=0 should be before N1234)
 N1234(-----MACRO-AREA------)
 
-(===============================)
-(========MUST BE CHANGED========)
-(===============================)
 
+(========MUST BE CHANGED========)
 #513=0.001(+)(Stock Stick Out From Main Spidle)
 #502=6.0(+)(STOCK:DIA)
 #511=0.001(+)(PART:OAL or Over All Length)
@@ -253,6 +254,9 @@ M0
 (LPO TOO CLOSE TO H1)
 M2
 %
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+
 %
 O1001(PNTEMPLATE-REVX-OPXX-LOWER)
 (FILE: O1001.P-2)
@@ -372,12 +376,11 @@ M0
 (LPO TOO CLOSE TO H1)
 M2
 %
+╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
++----------------------------------- THE SUB PROGRAMS WE REFERNCED ABOVE -------------------------------------------------------------------------------------+
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~ The sub programs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %
 O0001(PNHOME-POS-UPPER)
 (FILE: O0001)
@@ -393,6 +396,7 @@ G28V0U0
 G28W0
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O0001(PNHOME-POS-LOWER)
 (FILE: O0001.P-2)
@@ -408,6 +412,7 @@ G28U0
 G28W0
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O0002(PN2ND-HOME-START-UPPER)
 (FILE: O0002)
@@ -423,6 +428,7 @@ G30V0U0W0
 M56
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O0002(PN2ND-HOME-START-LOWER)
 (FILE: O0002.P-2)
@@ -438,6 +444,7 @@ G30U0W0
 M56
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O0003(PN2ND-HOME-END-UPPER)
 (FILE: O0003)
@@ -453,6 +460,7 @@ G30V0U0W0
 M57
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O0003(PN2ND-HOME-END-LOWER)
 (FILE: O0003.P-2)
@@ -468,6 +476,7 @@ G30U0W0
 M57
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8001(PNBAR-CHANGE-UPPER)
 (FILE: O8001)
@@ -522,6 +531,7 @@ M111(INTF CHECK ON)
 M1
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8002(PNMANUAL-PARTOFF-UPPER)
 (FILE: O8002)
@@ -561,6 +571,7 @@ M98P1
 M9
 M2
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8003(PNEJECT-AND-CUTOFF-UPPER)
 (FILE: O8003)
@@ -617,6 +628,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8003(PNEJECT-AND-CUTOFF-LOWER)
 (FILE: O8003.P-2)
@@ -689,6 +701,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8004(PNEJECT-AND-CUTOFF-UPPER-LPO)
 (FILE: O8004)
@@ -745,6 +758,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8004(PNEJECT-AND-CUTOFF-LOWER-LPO)
 (FILE: O8004.P-2)
@@ -808,6 +822,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8013(PNHAND-UNLOAD-AND-CUTOFF-UPPER)
 (FILE: O8013)
@@ -858,6 +873,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8013(PNHAND-UNLOAD-AND-CUTOFF-LOWER)
 (FILE: O8013.P-2)
@@ -931,6 +947,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8014(PNHAND-UNLOAD-AND-CUTOFF-UPPER-LPO)
 (FILE: O8014)
@@ -981,6 +998,7 @@ M9
 (*)M967(*)
 M99
 %
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 %
 O8014(PNHAND-UNLOAD-AND-CUTOFF-LOWER-LPO)
 (FILE: O8014.P-2)
@@ -1045,6 +1063,5 @@ M9
 (*)M967(*)
 M99
 %
-
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+╚═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
