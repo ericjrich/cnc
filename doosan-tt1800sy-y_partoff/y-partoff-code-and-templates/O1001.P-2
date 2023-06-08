@@ -1,6 +1,6 @@
 %
 O1001(PNTEMPLATE-REVX-OPXX-LOWER)
-
+(FILE: O1001.P-2)
 (----DOOSAN PUMA TT1800SY w/ Y-PartOff----)
 (Lower Program)
 (Template For Your Code)
@@ -9,48 +9,51 @@ O1001(PNTEMPLATE-REVX-OPXX-LOWER)
 
 
 #515=0(*LEAVE ALONE*)
-
+(#515=0 should be before N1234)
 N1234(-----MACRO-AREA------)
 
 (===============================)
 (========MUST BE CHANGED========)
 (===============================)
 
-#513=0.001(MAIN-STICK-OUT)
-#502=6.0(STOCK:DIA)
-#511=0.001(PART:OAL)
-#504=-0.001(SUB:SWALLOW-POS)
-#506=3.0(SUB:JAW-WIDTH)
+#513=0.001(+)(Stock Stick Out From Main Spidle)
+#502=6.0(+)(STOCK:DIA)
+#511=0.001(+)(PART:OAL or Over All Length)
+#504=-0.001(-)(SUB:SWALLOW-POS or how far the 2nd spindle goes over the part it is grabbing for the cutoff/transfer)
+#506=3.0(+)(Width of the 2nd spindles jaws from the face of its chuck)
 
 (=SHOULD CHECK THESE=)
-#508=1200(P/O:RPM)
-#507=.0040(P/O:FEED-IPR)
+#508=1200(+)(PartOff RPM)
+#507=.0040(+)(PartOff FeedRate Inches Per Rev or IPR)
 
 (=UNLIKELY TO CHANGE=)
-#500=-0.0750(P/O:Y-#1)
-#510=0.0100(P.O:Y-#2)
+#500=-0.0750(-)(Y-PartOff: Y Cut To Location 1of2 goes at feed rate #507)
+#510=0.0100(- or <= +.010")(Y-PartOff: Y Cut To Location 2of2 goes at feed rate .001)
 
 (=ALMOST NEVER CHANGED=)
-#501=0.0200(PART:FCE-AMT)
-#512=0.1180(P/0:TOOL-WIDTH)
-#503=0.1000(A-RAPID-POS)
+#501=0.0200(+)(PART:FCE-AMT)
+#512=0.1180(+)(P/0:TOOL-WIDTH)
+#503=0.1000(+)(A-RAPID-POS)
 
 (===============================)
 (========EDIT ABOVE HERE========)
 (===============================)
 
 (--AUTO-CALC--)(*LEAVE ALONE*)
-#509=[0-#511-#501-#512](LPO-Z-POS)
-#505=[#511+#504+#512+#501+#501](A-PULL-POS)
-#514=[#513+#509](LPO-SANITY-CHECK)
+#509=[0-#511-#501-#512](Z Cutoff Position when running LastPartOff For that bar / it is closer becuase it isn't pulling the bar for the next part)
+#505=[#511+#504+#512+#501+#501](A-Axis-PULL-Position when doing a normal PartOff Cut/Transfer)
+#514=[#513+#509](Last Part Off Sanity Check to ensure that we wont collide the partoff with the spindle)
+
 (--LOGIC--)(*LEAVE ALONE*)
-IF[#514LE.1]GOTO3000
+IF[#514LE.1]GOTO3000(if there isn't at least .100" between the partoff tool zero and the spindle face it will not let you make that mistake)
 (-----------------------)
 M1
 (--MACRO-FETCH-RETURN--)(*LEAVE ALONE*)
-IF[#515EQ1]GOTO1002
-IF[#515EQ2]GOTO2002
+(these are used during the cutoff area of the program to ensure the macros are called again and returns the program to the correct location after reading macros)
+IF[#515EQ1]GOTO1002 (returns to regular PartOff)
+IF[#515EQ2]GOTO2002 (returns to regular Last Part On Bar AKA LPO or LastPartOff)
 (-----------------------)
+
 G20(M12)
 M98P1
 M900(SYNC-UP)
