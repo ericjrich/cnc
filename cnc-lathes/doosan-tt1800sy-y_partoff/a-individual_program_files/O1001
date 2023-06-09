@@ -1,0 +1,117 @@
+%
+O1001(PNTEMPLATE-REVX-OPXX-UPPER)
+(FILE: O1001)
+(----DOOSAN PUMA TT1800SY w/ Y-PartOff----)
+(Upper Program)
+(Template For Your Code)
+(-----------------------------------------)
+(20230603)(1830 est)(EJR)
+
+
+#515=0(*LEAVE ALONE*)
+(#515=0 should be before N1234)
+N1234(-----MACRO-AREA------)
+
+
+(========MUST BE CHANGED========)
+#513=0.001(+)(Stock Stick Out From Main Spidle)
+#502=6.0(+)(STOCK:DIA)
+#511=0.001(+)(PART:OAL or Over All Length)
+#504=-0.001(-)(SUB:SWALLOW-POS or how far the 2nd spindle goes over the part it is grabbing for the cutoff/transfer)
+#506=3.0(+)(Width of the 2nd spindles jaws from the face of its chuck)
+
+(=SHOULD CHECK THESE=)
+#508=1200(+)(PartOff RPM)
+#507=.0040(+)(PartOff FeedRate Inches Per Rev or IPR)
+
+(=UNLIKELY TO CHANGE=)
+#500=-0.0750(-)(Y-PartOff: Y Cut To Location 1of2 goes at feed rate #507)
+#510=0.0100(- or <= +.010")(Y-PartOff: Y Cut To Location 2of2 goes at feed rate .001)
+
+(=ALMOST NEVER CHANGED=)
+#501=0.0200(+)(PART:FCE-AMT)
+#512=0.1180(+)(P/0:TOOL-WIDTH)
+#503=0.1000(+)(A-RAPID-POS)
+
+(===============================)
+(========EDIT ABOVE HERE========)
+(===============================)
+
+(--AUTO-CALC--)(*LEAVE ALONE*)
+#509=[0-#511-#501-#512](Z Cutoff Position when running LastPartOff For that bar / it is closer becuase it isn't pulling the bar for the next part)
+#505=[#511+#504+#512+#501+#501](A-Axis-PULL-Position when doing a normal PartOff Cut/Transfer)
+#514=[#513+#509](Last Part Off Sanity Check to ensure that we wont collide the partoff with the spindle)
+
+(--LOGIC--)(*LEAVE ALONE*)
+IF[#514LE.1]GOTO3000(if there isn't at least .100" between the partoff tool zero and the spindle face it will not let you make that mistake)
+(-----------------------)
+M1
+(--MACRO-FETCH-RETURN--)(*LEAVE ALONE*)
+(these are used during the cutoff area of the program to ensure the macros are called again and returns the program to the correct location after reading macros)
+IF[#515EQ1]GOTO1002 (returns to regular PartOff)
+IF[#515EQ2]GOTO2002 (returns to regular Last Part On Bar AKA LPO or LastPartOff)
+(-----------------------)
+G20(M12)
+M98P1
+M900(SYNC-UP)
+()
+(===============================)
+(========PART-CODE-BELOW========)
+(===============================)
+
+
+( USERS CAN USE: )
+(-)(N0001-N0999)
+(-)(M901-M948)
+(-)(#550-#599)
+
+(=========DONT-EDIT-BELOW=========)
+
+(*)M949(*)
+M05P11(S1 STOP)
+M05P12(UT STOP)
+M9(COOLANT OFF)
+M34(MILL-MODE-OFF)
+M98P1(HOME)
+G18(XZ PLANE)
+(*)M950(*)
+(------)
+/M00
+N1000(EJECT, P/O, TRANSFER)
+M98P1
+/2GOTO2000
+N1001(TRANSFER)
+
+#515=1(RETURN-MACRO)
+GOTO1234(FETCH-MACROS)
+N1002(FETCH-DONE)
+
+(*)M951(*)
+M98P8003(SUB)
+(*)M952(*)
+#515=0
+M30
+
+(====LPO-BELOW====)
+
+N2000(EJECT, P/O, TRANSFER-LPO)
+N2001(TRANSFER)
+
+#515=2(RETURN-MACRO)
+GOTO1234(FETCH-MACROS)
+N2002(FETCH-DONE)
+
+(*)M953(*)
+M98P8004(SUB-LPO)
+(*)M954(*)
+/2M98P8001(BAR CHANGE)
+(*)M960(*)
+#515=0
+M30
+
+N3000(ERROR)
+#515=0
+M0
+(LPO TOO CLOSE TO H1)
+M2
+%

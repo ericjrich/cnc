@@ -1,0 +1,50 @@
+%
+O8014(PNHAND-UNLOAD-AND-CUTOFF-UPPER-LPO)
+(FILE: O8014)
+(----DOOSAN PUMA TT1800SY w/ Y-PartOff----)
+(Upper Program)
+(Part-Off And Hand Unload: Last Part Off For This Bar)
+(-----------------------------------------)
+(20230603)(1830 est)(EJR)
+
+
+(----MACRO-NOTES----)
+(#502=STOCK:DIA)
+(#500=P/O:Y-#1)
+(#510=P.O:Y-#2)
+(#508=P/O:RPM)
+(#507=P/O:FEED-IPR)
+(#509=LPO-Z-POS)
+(------------------)
+N1(EJECT)
+(*)M961(*)
+M34
+M5P11
+M1
+G28V0
+G28U0
+G28W0(SAFETY POSITION)
+T1212
+G53Z6.0
+(*)M962(*)
+(*WAITING*)
+(*)M963(*)
+M110
+G0G54Z#509(->)
+X[#502+.050]Y[-.05-[#502/2]]M7
+X0.0
+G50S3000
+G97S[#508]M203P11
+G1G99Y[#500]F[#507]
+Y[#510]F.001
+(*)M964(*)
+(*WAITING*)
+(*)M965(*)
+G0G54W.003
+G28U0V0
+(*)M966(*)
+M98P1
+M9
+(*)M967(*)
+M99
+%

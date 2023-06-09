@@ -1,0 +1,15 @@
+%
+O0002(PN2ND-HOME-START-UPPER)
+(FILE: O0002)
+(----DOOSAN PUMA TT1800SY w/ Y-PartOff----)
+(Upper Program)
+(Home Return: Secondary)
+(Called At: Start Of Tool)
+(-----------------------------------------)
+(20230603)(1830 est)(EJR)
+
+G99G80G40
+G30V0U0W0
+M56
+M99
+%
