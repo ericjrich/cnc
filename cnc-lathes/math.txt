@@ -1,0 +1,10 @@
+IPM = RPM * IPR
+IPR = IPM / RPM
+RPM = IPM / IPR
+
+DIA = (SFM * 3.82) / RPM
+SFM = (RPM * DIA) / 3.82
+RPM = (SFM * 3.82) / DIA
+
+XCOMP = 2 [TR - (TR * TAN(45 - A/2))]
+ZCOMP = 2 [TR * TAN(A / 2)]
