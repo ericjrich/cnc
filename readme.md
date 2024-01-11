@@ -1,21 +1,21 @@
-*20240111_1155_est_EJR*
+*20240111_1215_est_EJR*
 
 **Eric J. Rich (aka EJR)**
 - Email: ericjrich@gmail.com
 - Website: [ericjrich.com](https://htmlpreview.github.io/?https://github.com/ericjrich/sites/main/apps/index.html)
 - Github: [ericjrich](https://github.com/ericjrich)
-
+- [Resume](https://github.com/ericjrich/cnc/blob/main/resume.pdf)
 ---
 
 ![a-ypart](a-ypart.gif)
 
 **DOOSAN PUMA TT1800SY USE WITH A Y-AXIS PART-OFF TOOL**
 
-These programs are used in conjunction to aid users in running their parts on a Doosan Puma TT1800SY lathe with a Y-Axis Part-Off Tool.
+- These programs are used in conjunction to aid users in running their parts on a Doosan Puma TT1800SY lathe with a Y-Axis Part-Off Tool.
 
-The programs consist of the main programs (Upper and Lower) and several sub-programs. I'll provide an overview of how they work together.
+- The programs consist of the main programs (Upper and Lower) and several sub-programs. I'll provide an overview of how they work together.
 
-- **The main programs (Upper and Lower)** serve as templates for user-specific code and contain sections that need to be modified by the users.
+- The main programs (Upper and Lower) serve as templates for user-specific code and contain sections that need to be modified by the users.
   - Sections marked as "MUST BE CHANGED" should be edited according to the specific requirements of the part being machined.
   - Sections marked as "SHOULD CHECK THESE" and "UNLIKELY TO CHANGE" may also need to be reviewed and adjusted if necessary.
 
@@ -53,7 +53,8 @@ The programs consist of the main programs (Upper and Lower) and several sub-prog
 
 **THE PROGRAMS THAT WE WILL USE TO ACHIEVE OUR GOAL**
 
-- **Main Programs:**
+**Main Programs:**
+
   - Please note that "PN" in the file names represents a placeholder for the specific part number or identifier.
   - "REVX" and "OPXX" also represent placeholders for revision numbers and operation numbers, respectively.
   - Users should replace these placeholders with the appropriate values for their specific programs.
@@ -62,7 +63,8 @@ The programs consist of the main programs (Upper and Lower) and several sub-prog
   - `O1001(PNTEMPLATE-REVX-OPXX-LOWER)`: Lower Program Template
     - Provides a template for user-specific code for the lower turret of the Doosan Puma TT1800SY lathe. Users can modify sections to customize the program for their specific part.
 
-- **Sub-Programs:**
+**Sub-Programs:**
+
   - `O0001(PNHOME-POS-UPPER)`: Home Return - Primary (Upper)
     - Returns the upper turret to the home position. Called at the start or end of a tool operation.
   - `O0001(PNHOME-POS-LOWER)`: Home Return - Primary (Lower)
