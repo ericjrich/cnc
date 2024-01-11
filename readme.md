@@ -2,7 +2,7 @@
 
 **Eric J. Rich (aka EJR)**
 - Email: ericjrich@gmail.com
-- Website: [ericjrich.com](https://www.ericjrich.com)
+- Website: [ericjrich.com](ericjrich.com)
 - Github: [ericjrich](https://github.com/ericjrich)
 
 ---
